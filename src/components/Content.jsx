@@ -25,10 +25,35 @@
  * @author Alexis Munsayac <alexis.munsayac@gmail.com>
  * @copyright Alexis Munsayac 2019
  */
+import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
-const Content = styled(motion.div)`
+const ContentAnimation = {
+  hide: {
+    opacity: 0,
+    scale: 0.75,
+    x: '-50%',
+    y: '-50%',
+    transition: {
+      duration: 0.4,
+      when: 'afterChildren',
+    },
+  },
+  show: {
+    opacity: 1,
+    scale: 1,
+    x: '-50%',
+    y: '-50%',
+    transition: {
+      duration: 0.4,
+      when: 'beforeChildren',
+    },
+  },
+};
+
+const ContentBase = styled(motion.div)`
   position: fixed;
   top: 50vh;
   left: 50vw;
@@ -47,5 +72,22 @@ const Content = styled(motion.div)`
   white-space: nowrap;
   z-index: 200;
 `;
+
+function Content({ initial, animate, children }) {
+  return (
+    <ContentBase variants={ContentAnimation} initial={initial} animate={animate}>
+      { children }
+    </ContentBase>
+  );
+}
+
+Content.propTypes = {
+  initial: PropTypes.string.isRequired,
+  animate: PropTypes.string.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node),
+  ]).isRequired,
+};
 
 export default Content;
